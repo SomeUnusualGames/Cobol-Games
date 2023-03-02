@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 // TODO: Linux version
 
@@ -74,7 +75,12 @@ int showAt(char *str, int x, int y, int color)
     WORD wAttributes = color;
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), wAttributes);
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
-    putchar(str[0]);
+    for (int i = 0; i < strlen(str); ++i) {
+        putchar(str[i]);
+        ++pos.X;
+        SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
+    }
+    //putchar(str[0]);
     //show(str);
     #endif
     return 0;
