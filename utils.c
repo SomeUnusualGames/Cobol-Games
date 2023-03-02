@@ -2,50 +2,68 @@
 #include <stdlib.h>
 #include <string.h>
 
-// TODO: Linux version
-
-#ifdef _WIN32
+#if defined(_WIN32)
 #include <windows.h>
 #include <conio.h>
 #define FOREGROUND_WHITE (FOREGROUND_RED | FOREGROUND_BLUE | FOREGROUND_GREEN)
+#elif defined(__linux__)
+#include <ncurses.h>
+#else
+#error Unsupported OS ¯\_(ツ)_/¯
 #endif
 
+#if defined(_WIN32)
 COORD coord = {0,0};
+#endif
+
+void initWindow()
+{
+    #if defined(_WIN32)
+    // Nothing needs to be done for Windows,
+    // this is here just for consistency
+    #elif defined(__linux__)
+	initscr(); // Init ncruses screen
+	noecho();  // Do not print keys pressed
+	nodelay(stdscr, TRUE); // To make getch non-blocking
+    #endif
+}
 
 void hideCursor()
 {
-    #ifdef _WIN32
+    #if defined(_WIN32)
     HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
     CONSOLE_CURSOR_INFO info;
     info.dwSize = 100;
     info.bVisible = FALSE;
     SetConsoleCursorInfo(consoleHandle, &info);
+    #elif defined(__linux__)
+    curs_set(0);
     #endif
 }
 
 int resetCursor()
 {
-    #ifdef _WIN32
+    #if defined(_WIN32)
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+    #elif defined(__linux__)
+    move(0, 0);
     #endif
     return 0;
 }
 
 int getKey()
 {
-    #ifdef _WIN32
-    if (_kbhit()) {
-        return _getch();
-    }
-    return -1;
-    #else
-	return getchar();
+    #if defined(_WIN32)
+    return _kbhit() ? _getch() : -1;
+    #elif defined(__linux__)
+	int c = getch();
+    return c != ERR ? c : -1;
     #endif
 }
 
 int show(char *str)
 {
-	#ifdef _WIN32
+	#if defined(_WIN32)
     WORD wAttributes = 0;
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     switch (str[0]) {
@@ -67,7 +85,7 @@ int show(char *str)
 int showAt(char *str, int x, int y, int color)
 {
     resetCursor();
-    #ifdef _WIN32
+    #if defined(_WIN32)
     COORD pos;
     pos.X = x;
     pos.Y = y;
@@ -80,8 +98,14 @@ int showAt(char *str, int x, int y, int color)
         ++pos.X;
         SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
     }
-    //putchar(str[0]);
-    //show(str);
+    #elif defined(__linux__)
+    // TODO: color
+    for (int i = 0; i < strlen(str); ++i) {
+        move(x, y);
+        printw("%s", str[i]);
+        refresh();
+        ++x;
+    }
     #endif
     return 0;
 }
