@@ -2,3 +2,4 @@
 *.exe
 *.bat
 *old.cob
+c_test.c

@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 #if defined(_WIN32)
 #include <windows.h>
@@ -61,6 +62,7 @@ int getKey()
     #endif
 }
 
+#if 0
 int show(char *str)
 {
 	#if defined(_WIN32)
@@ -81,6 +83,7 @@ int show(char *str)
 	putchar(str[0]);
 	return 0;
 }
+#endif
 
 int showAt(char *str, int x, int y, int color)
 {
@@ -103,9 +106,22 @@ int showAt(char *str, int x, int y, int color)
     for (int i = 0; i < strlen(str); ++i) {
         move(x, y);
         printw("%s", str[i]);
-        refresh();
         ++x;
     }
+    refresh();
     #endif
+    return 0;
+}
+
+int delay()
+{
+    struct timespec ts;
+    int millisec = (1000 / 30); // 33.333
+    int res;
+    ts.tv_sec = millisec / 1000;
+    ts.tv_nsec = (millisec % 1000) * 1000000;
+    do {
+        res = nanosleep(&ts, &ts);
+    } while(res);
     return 0;
 }
