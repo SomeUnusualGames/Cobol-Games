@@ -104,11 +104,11 @@ int showAt(char *str, int x, int y, int color)
     #elif defined(__linux__)
     // TODO: color
     for (int i = 0; i < strlen(str); ++i) {
-        move(x, y);
-        printw("%s", str[i]);
+        move(y, x);
+        printw("%c", str[i]);
+        refresh();
         ++x;
     }
-    refresh();
     #endif
     return 0;
 }

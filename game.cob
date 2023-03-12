@@ -31,7 +31,7 @@
            PERFORM DRAW-COM-RACKET
            PERFORM DRAW-BALL
            PERFORM SHOW-SCORE
-           MOVE FUNCTION CURRENT-DATE(9:9) TO DATE-SEED
+           MOVE FUNCTION CURRENT-DATE(9:8) TO DATE-SEED
            MOVE FUNCTION RANDOM(DATE-SEED) TO RAND-NUM
            PERFORM UNTIL KEEP-PLAYING EQUALS ZERO
       ******** Key pressed
@@ -80,7 +80,7 @@
                        PERFORM RESET-GAME                   
                    END-IF
       ************ Wall bounce
-                   IF BALL-X EQUALS 40 OR BALL-X EQUALS 0 THEN
+                   IF BALL-X EQUALS 39 OR BALL-X EQUALS 1 THEN
                        MULTIPLY -1 BY MOV-X
                    END-IF
       ************ Racket bounce
@@ -90,7 +90,6 @@
                    IF BALL-X EQUALS COM-X AND BALL-Y EQUALS 3 THEN
                        MULTIPLY -1 BY MOV-Y
                    END-IF
-                   *>DISPLAY BALL-X " " BALL-Y " " PLAYER-X
       ************ Update ball
                    PERFORM CLEAR-BALL
                    IF MOV-X IS GREATER THAN 0 THEN
@@ -106,6 +105,16 @@
                    PERFORM DRAW-BALL
                    PERFORM DRAW-PLAYER-RACKET
                    PERFORM DRAW-COM-RACKET
+      ********* Com
+                   IF BALL-X IS LESS THAN COM-X THEN
+                       PERFORM CLEAN-COM-RACKET
+                       SUBTRACT 1 FROM COM-X
+                       PERFORM DRAW-COM-RACKET
+                   ELSE IF BALL-X IS GREATER THAN COM-X THEN
+                       PERFORM CLEAN-COM-RACKET
+                       ADD 1 TO COM-X
+                       PERFORM DRAW-COM-RACKET
+                   END-IF
                END-IF
                CALL "delay"
            END-PERFORM.
@@ -114,10 +123,17 @@
        RESET-GAME.
            MOVE 0 TO STARTED
            PERFORM CLEAR-BALL
+           PERFORM CLEAN-COM-RACKET
+           PERFORM CLEAN-PLAYER-RACKET
            PERFORM SHOW-SCORE
            MOVE 20 TO BALL-X
            MOVE 12 TO BALL-Y
+           MOVE 20 TO PLAYER-X
+           MOVE 20 TO COM-X
+           PERFORM DRAW-COM-RACKET
+           PERFORM DRAW-PLAYER-RACKET
            PERFORM DRAW-BALL.
+
        DRAW-FIELD.
            PERFORM VARYING Y-VALUE FROM 1 BY 1 UNTIL Y-VALUE > 25
                IF Y-VALUE EQUALS 1 THEN
