@@ -13,8 +13,8 @@
                05 STARTED PIC 9 VALUE 0.
                05 KEYPRESSED PIC 9(4) VALUE 0.
                05 CHAR-PRESSED PIC X VALUE SPACE.
-               05 PLAYER-SCORE PIC 99 VALUE 0.
-               05 COM-SCORE PIC 99 VALUE 0.
+               05 PLAYER-SCORE PIC 9(3) VALUE 0.
+               05 COM-SCORE PIC 9(3) VALUE 0.
                05 PLAYER-X PIC 99 VALUE 20.
                05 COM-X PIC 99 VALUE 20.
            01 BALL.
@@ -65,7 +65,7 @@
                              MULTIPLY -1 BY MOV-Y
                          ELSE IF RAND-NUM >= 0.4 AND RAND-NUM < 0.6 THEN
                              MULTIPLY -1 BY MOV-X
-                             MULTIPLY 1 BY MOV-Y                             
+                             MULTIPLY 1 BY MOV-Y
                          END-IF
                       END-IF
                END-EVALUATE
@@ -77,7 +77,7 @@
                        PERFORM RESET-GAME
                    ELSE IF BALL-Y EQUALS 24 THEN
                        ADD 1 TO COM-SCORE
-                       PERFORM RESET-GAME                   
+                       PERFORM RESET-GAME
                    END-IF
       ************ Wall bounce
                    IF BALL-X EQUALS 39 OR BALL-X EQUALS 1 THEN
@@ -117,7 +117,8 @@
                    END-IF
                END-IF
                CALL "delay"
-           END-PERFORM.
+           END-PERFORM
+           CALL "resetWindow".
        STOP RUN.
 
        RESET-GAME.

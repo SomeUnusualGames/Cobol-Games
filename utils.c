@@ -14,18 +14,17 @@
 #endif
 
 #if defined(_WIN32)
-COORD coord = {0,0};
+COORD coord = {0, 0};
 #endif
 
 void initWindow()
 {
     #if defined(_WIN32)
-    // Nothing needs to be done for Windows,
-    // this is here just for consistency
+    system("cls");
     #elif defined(__linux__)
-	initscr(); // Init ncruses screen
-	noecho();  // Do not print keys pressed
-	nodelay(stdscr, TRUE); // To make getch non-blocking
+    initscr(); // Init ncruses screen
+    noecho();  // Do not print keys pressed
+    nodelay(stdscr, TRUE); // To make getch non-blocking
     #endif
 }
 
@@ -57,7 +56,7 @@ int getKey()
     #if defined(_WIN32)
     return _kbhit() ? _getch() : -1;
     #elif defined(__linux__)
-	int c = getch();
+    int c = getch();
     return c != ERR ? c : -1;
     #endif
 }
@@ -65,9 +64,9 @@ int getKey()
 #if 0
 int show(char *str)
 {
-	#if defined(_WIN32)
+    #if defined(_WIN32)
     WORD wAttributes = 0;
-	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     switch (str[0]) {
     case 'W':
         wAttributes = FOREGROUND_RED | FOREGROUND_INTENSITY;
@@ -78,10 +77,10 @@ int show(char *str)
     default:
         wAttributes = FOREGROUND_WHITE;
     }
-	SetConsoleTextAttribute(hConsole, wAttributes);
-	#endif
-	putchar(str[0]);
-	return 0;
+    SetConsoleTextAttribute(hConsole, wAttributes);
+    #endif
+    putchar(str[0]);
+    return 0;
 }
 #endif
 
@@ -92,7 +91,6 @@ int showAt(char *str, int x, int y, int color)
     COORD pos;
     pos.X = x;
     pos.Y = y;
-    fflush(stdin);
     WORD wAttributes = color;
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), wAttributes);
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
@@ -123,5 +121,17 @@ int delay()
     do {
         res = nanosleep(&ts, &ts);
     } while(res);
+    return 0;
+}
+
+int resetWindow()
+{
+    #if defined(_WIN32)
+    system("cls");
+    WORD wAttributes = FOREGROUND_WHITE;
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), wAttributes);
+    #elif defined(__linux__)
+    endwin();
+    #endif
     return 0;
 }
