@@ -4,24 +4,26 @@
        WORKING-STORAGE SECTION.
            01 RAND-NUM USAGE COMP-1.
            01 DATE-SEED PIC 9(16).
-           01 DUMMY PIC 99 VALUE 0.
+           01 DUMMY PIC 99 VALUE ZERO.
            01 MAP.
-               05 Y-VALUE PIC 99 VALUE 0.
-               05 X-VALUE PIC 99 VALUE 0.
+               05 Y-VALUE PIC 99 VALUE ZERO.
+               05 X-VALUE PIC 99 VALUE ZERO.
            01 GAME.
                05 KEEP-PLAYING PIC 9 VALUE 1.
-               05 STARTED PIC 9 VALUE 0.
-               05 KEYPRESSED PIC 9(4) VALUE 0.
+               05 STARTED PIC 9 VALUE ZERO.
+               05 KEYPRESSED PIC 9(4) VALUE ZERO.
                05 CHAR-PRESSED PIC X VALUE SPACE.
-               05 PLAYER-SCORE PIC 9(3) VALUE 0.
-               05 COM-SCORE PIC 9(3) VALUE 0.
+               05 PLAYER-SCORE PIC 9(3) VALUE ZERO.
+               05 COM-SCORE PIC 9(3) VALUE ZERO.
                05 PLAYER-X PIC 99 VALUE 20.
+               05 PLAYER-Y PIC 99 VALUE 23.
                05 COM-X PIC 99 VALUE 20.
+               05 COM-Y PIC 9 VALUE 3.
            01 BALL.
                05 BALL-X PIC 99 VALUE 20.
                05 BALL-Y PIC 99 VALUE 12.
-               05 MOV-X PIC S99 VALUE 0.
-               05 MOV-Y PIC S99 VALUE 0.
+               05 MOV-X PIC S99 VALUE ZERO.
+               05 MOV-Y PIC S99 VALUE ZERO.
        PROCEDURE DIVISION.
        MAIN-PROCEDURE.
            CALL "initWindow"
@@ -84,10 +86,10 @@
                        MULTIPLY -1 BY MOV-X
                    END-IF
       ************ Racket bounce
-                   IF BALL-X EQUALS PLAYER-X AND BALL-Y EQUALS 23 THEN
+                   IF BALL-X EQUALS PLAYER-X AND BALL-Y EQUALS PLAYER-Y THEN
                        MULTIPLY -1 BY MOV-Y
                    END-IF
-                   IF BALL-X EQUALS COM-X AND BALL-Y EQUALS 3 THEN
+                   IF BALL-X EQUALS COM-X AND BALL-Y EQUALS COM-Y THEN
                        MULTIPLY -1 BY MOV-Y
                    END-IF
       ************ Update ball
@@ -105,15 +107,17 @@
                    PERFORM DRAW-BALL
                    PERFORM DRAW-PLAYER-RACKET
                    PERFORM DRAW-COM-RACKET
-      ********* Com
-                   IF BALL-X IS LESS THAN COM-X THEN
-                       PERFORM CLEAN-COM-RACKET
-                       SUBTRACT 1 FROM COM-X
-                       PERFORM DRAW-COM-RACKET
-                   ELSE IF BALL-X IS GREATER THAN COM-X THEN
-                       PERFORM CLEAN-COM-RACKET
-                       ADD 1 TO COM-X
-                       PERFORM DRAW-COM-RACKET
+      ************ Com
+                   IF MOV-Y IS LESS THAN ZERO THEN
+                       IF BALL-X IS LESS THAN COM-X THEN
+                           PERFORM CLEAN-COM-RACKET
+                           SUBTRACT 1 FROM COM-X
+                           PERFORM DRAW-COM-RACKET
+                       ELSE IF BALL-X IS GREATER THAN COM-X THEN
+                           PERFORM CLEAN-COM-RACKET
+                           ADD 1 TO COM-X
+                           PERFORM DRAW-COM-RACKET
+                       END-IF
                    END-IF
                END-IF
                CALL "delay"
