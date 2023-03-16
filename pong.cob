@@ -2,28 +2,28 @@
        PROGRAM-ID. GAME.
        DATA DIVISION.
        WORKING-STORAGE SECTION.
-           01 RAND-NUM USAGE COMP-1.
-           01 DATE-SEED PIC 9(16).
-           01 DUMMY PIC 99 VALUE ZERO.
-           01 MAP.
-               05 Y-VALUE PIC 99 VALUE ZERO.
-               05 X-VALUE PIC 99 VALUE ZERO.
-           01 GAME.
-               05 KEEP-PLAYING PIC 9 VALUE 1.
-               05 STARTED PIC 9 VALUE ZERO.
-               05 KEYPRESSED PIC 9(4) VALUE ZERO.
-               05 CHAR-PRESSED PIC X VALUE SPACE.
-               05 PLAYER-SCORE PIC 9(3) VALUE ZERO.
-               05 COM-SCORE PIC 9(3) VALUE ZERO.
-               05 PLAYER-X PIC 99 VALUE 20.
-               05 PLAYER-Y PIC 99 VALUE 23.
-               05 COM-X PIC 99 VALUE 20.
-               05 COM-Y PIC 9 VALUE 3.
-           01 BALL.
-               05 BALL-X PIC 99 VALUE 20.
-               05 BALL-Y PIC 99 VALUE 12.
-               05 MOV-X PIC S99 VALUE ZERO.
-               05 MOV-Y PIC S99 VALUE ZERO.
+       01 RAND-NUM USAGE COMP-1.
+       01 DATE-SEED PIC 9(16).
+       01 DUMMY PIC 99 VALUE ZERO.
+       01 MAP.
+           05 Y-VALUE PIC 99 VALUE ZERO.
+           05 X-VALUE PIC 99 VALUE ZERO.
+       01 GAME.
+           05 KEEP-PLAYING PIC 9 VALUE 1.
+           05 STARTED PIC 9 VALUE ZERO.
+           05 KEYPRESSED PIC 9(4) VALUE ZERO.
+           05 CHAR-PRESSED PIC X VALUE SPACE.
+           05 PLAYER-SCORE PIC 9(3) VALUE ZERO.
+           05 COM-SCORE PIC 9(3) VALUE ZERO.
+           05 PLAYER-X PIC 99 VALUE 20.
+           05 PLAYER-Y PIC 99 VALUE 23.
+           05 COM-X PIC 99 VALUE 20.
+           05 COM-Y PIC 9 VALUE 3.
+       01 BALL.
+           05 BALL-X PIC 99 VALUE 20.
+           05 BALL-Y PIC 99 VALUE 12.
+           05 MOV-X PIC S99 VALUE ZERO.
+           05 MOV-Y PIC S99 VALUE ZERO.
        PROCEDURE DIVISION.
        MAIN-PROCEDURE.
            CALL "initWindow"
@@ -53,7 +53,7 @@
                           ADD 1 TO PLAYER-X
                           PERFORM DRAW-PLAYER-RACKET
                       END-IF
-                  WHEN " "
+                  WHEN SPACE
                       IF STARTED EQUALS ZERO THEN
                          MOVE 1 TO STARTED
                          MOVE FUNCTION RANDOM TO RAND-NUM

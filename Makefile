@@ -1,6 +1,6 @@
 .PHONY: clean
 
-MAIN_FILE ?= game
+MAIN_FILE ?= pong
 UTILS_FILE ?= utils
 CC ?= cc
 COBC ?= cobc
