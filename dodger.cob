@@ -23,8 +23,8 @@
            05 PLAYER-Y PIC 99 VALUE 13.
        PROCEDURE DIVISION.
        MAIN-PROCEDURE.
-     ***** TODO: Add obstacles, make the C function "delay"
-     ***** use a parameter instead of a hardcoded value
+      **** TODO: Add obstacles, make the C function "delay"
+      **** use a parameter instead of a hardcoded value
            CALL "initWindow"
            CALL "hideCursor"
            PERFORM INIT-MOUNTAINS
