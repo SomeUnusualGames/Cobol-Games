@@ -120,7 +120,7 @@
                        END-IF
                    END-IF
                END-IF
-               CALL "delay"
+               CALL "delay" USING BY VALUE 33
            END-PERFORM
            CALL "resetWindow".
        STOP RUN.
@@ -260,4 +260,4 @@
                BY VALUE 4
            END-CALL
            DISPLAY "PLAYER: " PLAYER-SCORE " COM: " COM-SCORE.
-       END PROGRAM GAME.
+       END PROGRAM PONG.

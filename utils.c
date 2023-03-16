@@ -111,10 +111,10 @@ int showAt(char *str, int x, int y, int color)
     return 0;
 }
 
-int delay()
+int delay(int t)
 {
     struct timespec ts;
-    int millisec = (1000 / 30); // 33.333
+    int millisec = t;
     int res;
     ts.tv_sec = millisec / 1000;
     ts.tv_nsec = (millisec % 1000) * 1000000;

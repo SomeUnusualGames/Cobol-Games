@@ -63,7 +63,7 @@
                END-EVALUATE
                PERFORM DRAW-BORDERS
                PERFORM DRAW-MOUNTAINS
-               CALL "delay"
+               CALL "delay" USING BY VALUE 33
                PERFORM UPDATE-MOUNTAINS
            END-PERFORM.
        STOP RUN.
