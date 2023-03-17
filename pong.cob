@@ -26,6 +26,12 @@
            05 MOV-Y PIC S99 VALUE ZERO.
        PROCEDURE DIVISION.
        MAIN-PROCEDURE.
+      ***** **** *    * *****
+      *   * *  * **   * *    
+      *   * *  * * *  * *    
+      ****  *  * *  * * *****
+      *     *  * *   ** *   *
+      *     **** *    * *****
            CALL "initWindow"
            CALL "hideCursor"
            PERFORM DRAW-FIELD

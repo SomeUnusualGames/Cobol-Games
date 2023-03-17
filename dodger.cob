@@ -9,6 +9,7 @@
            05 STARTED PIC 9 VALUE ZERO.
            05 KEYPRESSED PIC 9(4) VALUE ZERO.
            05 CHAR-PRESSED PIC X VALUE SPACE.
+           05 DELAY-TIME PIC 99 VALUE 33.
        01 MAP.
            05 MOUNTAIN-Y PIC S99 VALUE 9.
            05 X-VALUE PIC 99 VALUE ZERO.
@@ -21,10 +22,22 @@
        01 PLAYER.
            05 PLAYER-X PIC 99 VALUE 3.
            05 PLAYER-Y PIC 99 VALUE 13.
+       01 OBSTACLE.
+           05 TIMER USAGE COMP-1 VALUE 15.0.
+           05 MAX-TIMER USAGE COMP-1 VALUE 15.0.
+           05 OBSTACLES-Y PIC 99 OCCURS 10 TIMES VALUE ZERO.
+           05 OBSTACLES-X PIC 99 OCCURS 10 TIMES VALUE ZERO.
+           05 OBSTACLE-COUNTER PIC 9 VALUE ZERO.
+           05 OBSTACLE-TIME USAGE COMP-1 VALUE 0.33.
+           05 OBSTACLE-I PIC 99 VALUE 0.
        PROCEDURE DIVISION.
        MAIN-PROCEDURE.
-      **** TODO: Add obstacles, make the C function "delay"
-      **** use a parameter instead of a hardcoded value
+      **   **** **   *****  *****  *****
+      * *  *  * * *  *      *      *   *
+      *  * *  * *  * *      ****   *   *
+      *  * *  * *  * *****  *      **** 
+      * *  *  * * *  *   *  *      *  *
+      **   **** **   *****  *****  *   *
            CALL "initWindow"
            CALL "hideCursor"
            PERFORM INIT-MOUNTAINS
@@ -63,8 +76,42 @@
                END-EVALUATE
                PERFORM DRAW-BORDERS
                PERFORM DRAW-MOUNTAINS
-               CALL "delay" USING BY VALUE 33
+               PERFORM DRAW-OBSTACLES
+               PERFORM CHECK-COLLISION
+               CALL "delay" USING BY VALUE DELAY-TIME
                PERFORM UPDATE-MOUNTAINS
+               PERFORM CLEAR-OBSTACLES
+               SUBTRACT OBSTACLE-TIME FROM TIMER
+               IF TIMER <= ZERO THEN
+                   ADD 1 TO OBSTACLE-I
+                   IF OBSTACLE-I EQUALS 3 THEN
+                       MOVE 0 TO OBSTACLE-I
+                       IF OBSTACLE-TIME GREATER THAN 0.1 THEN
+                           SUBTRACT 0.01 FROM OBSTACLE-TIME
+                       END-IF
+                       IF DELAY-TIME GREATER THAN 3 THEN
+                           SUBTRACT 1 FROM DELAY-TIME
+                       END-IF
+                       IF MAX-TIMER GREATER THAN 1.0 THEN
+                           SUBTRACT 1.0 FROM MAX-TIMER
+                       END-IF
+                   END-IF
+                   MOVE MAX-TIMER TO TIMER
+                   MOVE 1 TO I
+                   MOVE ZERO TO OBSTACLE-COUNTER
+                   PERFORM UNTIL I > 10
+                       IF OBSTACLES-X(I) EQUALS ZERO THEN
+                           MOVE 60 TO OBSTACLES-X(I)
+                           MOVE FUNCTION RANDOM TO RAND-NUM
+                           COMPUTE OBSTACLES-Y(I) = 11 + RAND-NUM * 3
+                           ADD 1 TO OBSTACLE-COUNTER
+                           IF OBSTACLE-COUNTER EQUALS 2 THEN
+                               EXIT PERFORM
+                           END-IF
+                       END-IF
+                       ADD 1 TO I
+                   END-PERFORM
+               END-IF
            END-PERFORM.
        STOP RUN.
        
@@ -163,4 +210,42 @@
                BY VALUE PLAYER-Y
                BY VALUE 1
            END-CALL.
-           
+
+       CLEAR-OBSTACLES.
+           MOVE 1 TO I
+           PERFORM UNTIL I > 10
+               IF OBSTACLES-X(I) > 0 THEN
+                   CALL "showAt" USING
+                       BY REFERENCE " "
+                       BY VALUE OBSTACLES-X(I)
+                       BY VALUE OBSTACLES-Y(I)
+                       BY VALUE 2
+                   END-CALL
+                   SUBTRACT 1 FROM OBSTACLES-X(I)
+               END-IF
+               ADD 1 TO I
+           END-PERFORM.
+
+       DRAW-OBSTACLES.
+           MOVE 1 TO I
+           PERFORM UNTIL I > 10
+               IF OBSTACLES-X(I) > 0 THEN
+                   CALL "showAt" USING
+                       BY REFERENCE "L"
+                       BY VALUE OBSTACLES-X(I)
+                       BY VALUE OBSTACLES-Y(I)
+                       BY VALUE 4
+                   END-CALL
+               END-IF
+               ADD 1 TO I
+           END-PERFORM.
+
+       CHECK-COLLISION.
+           MOVE 1 TO I
+           PERFORM UNTIL I > 10
+               IF PLAYER-X = OBSTACLES-X(I)
+                  AND PLAYER-Y = OBSTACLES-Y(I) THEN
+                  MOVE ZERO TO KEEP-PLAYING
+               END-IF
+               ADD 1 TO I
+           END-PERFORM.
