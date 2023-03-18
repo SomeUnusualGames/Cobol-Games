@@ -1,5 +1,6 @@
        IDENTIFICATION DIVISION.
        PROGRAM-ID. DODGER.
+       AUTHOR. SomeUnusualGames
        DATA DIVISION.
        WORKING-STORAGE SECTION.
        01 RAND-NUM USAGE COMP-1.
@@ -45,31 +46,32 @@
            PERFORM UNTIL KEEP-PLAYING EQUALS ZERO
                CALL "getKey" RETURNING KEYPRESSED
                MOVE FUNCTION CHAR(KEYPRESSED + 1) TO CHAR-PRESSED
+               PERFORM DRAW-PLAYER
                EVALUATE FUNCTION LOWER-CASE(CHAR-PRESSED)
                    WHEN "q" MOVE ZERO TO KEEP-PLAYING
                    WHEN "w"
                        IF PLAYER-Y GREATER THAN 11 THEN
-                           PERFORM CLEAN-PLAYER
+                           PERFORM CLEAR-PLAYER
                            ADD 1 TO PLAYER-X
                            SUBTRACT 1 FROM PLAYER-Y
                            PERFORM DRAW-PLAYER
                        END-IF
                    WHEN "s"
                        IF PLAYER-Y LESS THAN 13 THEN
-                           PERFORM CLEAN-PLAYER
+                           PERFORM CLEAR-PLAYER
                            SUBTRACT 1 FROM PLAYER-X
                            ADD 1 TO PLAYER-Y
                            PERFORM DRAW-PLAYER
                        END-IF
                    WHEN "d"
                        IF PLAYER-X LESS THAN 50 THEN
-                           PERFORM CLEAN-PLAYER
+                           PERFORM CLEAR-PLAYER
                            ADD 1 TO PLAYER-X
                            PERFORM DRAW-PLAYER
                        END-IF
                    WHEN "a"
                        IF PLAYER-X GREATER THAN 3 THEN
-                           PERFORM CLEAN-PLAYER
+                           PERFORM CLEAR-PLAYER
                            SUBTRACT 1 FROM PLAYER-X
                            PERFORM DRAW-PLAYER
                        END-IF
@@ -112,6 +114,7 @@
                        ADD 1 TO I
                    END-PERFORM
                END-IF
+               CALL "resetWindow"
            END-PERFORM.
        STOP RUN.
        
@@ -195,7 +198,7 @@
                ADD 1 TO I
            END-PERFORM.
 
-       CLEAN-PLAYER.
+       CLEAR-PLAYER.
            CALL "showAt" USING
                BY REFERENCE " "
                BY VALUE PLAYER-X
